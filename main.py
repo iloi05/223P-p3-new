@@ -20,24 +20,36 @@ while True:
     prompt = input("Enter menu choice: ")
     if prompt == "1":
         num = input("Enter phone number: ")
+        if not is_int(id = num):
+            print("That is not a valid phone number.")
+            continue
         first = input("Enter first name: ")
         last = input("Enter last name: ")
         add_contact(contacts, id = num, first_name  = first, last_name = last)
     elif prompt == "2":
         num = input("Enter phone number: ")
+        if not is_int(id = num):
+            print("That is not a valid phone number.")
+            continue
         new_first = input("Enter first name: ")
         new_last = input("Enter last name: ")
         modify_contact(contacts, id = num, first_name = new_first, last_name = new_last)
         print("Modified: {} {}".format(new_first, new_last))
     elif prompt == "3":
         num = input("Enter phone number: ")
+        if not is_int(id = num):
+            print("That is not a valid phone number.")
+            continue
         delete_contact(contacts, id = num)
     elif prompt == "4":
-        print_contact( sort_contact(contacts))
+        print_contact(contacts)
     elif prompt == "5":
+        if not contacts:
+            print("The list is empty currently, no contacts found .... returning to main menu")
+            continue
         search = input("Enter search string: ")
         find_contact(contacts, find = search)
-    elif prompt == 6:
+    if prompt == "6":
         break
     if prompt not in choices:
         print("You've chosen an invalid option try again")

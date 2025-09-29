@@ -1,7 +1,43 @@
 # Name: Ivy Loi
 # Date: 9/21/25
 # Purpose of file: Create contact list functions that will be used in main file
+           
+def is_int(id):
+    try:
+        int(id)
+        return True
+    except ValueError:
+        return False
 
+def add_contact(contact_dict, /, *, id, first_name, last_name):
+    """Adds contact to dictionary"""
+    if id in contact_dict:
+        print("This contact already exists in the system, please enter a new contact.")
+        return "error"
+    contact_dict[id] = {"first" : first_name, "last" : last_name}
+    return contact_dict[id]
+
+def modify_contact(contact_dict, *, id, first_name, last_name):
+    """Gets contact and modifies it"""
+    if id not in contact_dict:
+        print("Please input a valid phone number that is in the dictionary.")
+        return "error"
+    else:
+        contact_dict[id] = {"first" : first_name, "last" : last_name}
+        return contact_dict[id]
+
+def delete_contact(contact_dict, *, id):
+    """Deletes contact from dictionary"""
+    if id not in contact_dict:
+        return "error"
+    rem_contact = contact_dict.pop(id)
+    print("Contact deleted...")
+    return rem_contact
+
+def sort_contact(contact_dict, /):
+    """Sorts contacts by last name"""
+    return {k: v for k, v in sorted(contact_dict.items(), key = lambda item: item[1].get("last", ""))}
+    
 def print_contact(contact_dict):
     """Prints contact list"""
     if not contact_dict:
@@ -10,47 +46,30 @@ def print_contact(contact_dict):
         print("================== CONTACT LIST ==================")
         print("Last Name           First Name           Phone    ")
         print("==================  ===================  =========")
-        for last, info in contact_dict.items():
-            first = info.get("first", "N/A")
-            phone = info.get("phone", "N/A")
-            print(f"{last:<20}{first:<20}{phone:<10}")
-           
-
-def add_contact(contact_dict, /, *, id, first_name, last_name):
-    """Adds contact to dictionary"""
-    if id in contact_dict:
-        return "error"
-    contact_dict[id] = [first_name, last_name]
-    return contact_dict[id]
-
-def modify_contact(contact_dict, *, id, first_name, last_name):
-    """Gets contact and modifies it"""
-    if id not in contact_dict:
-        return "error"
-    contact_dict[id] = [first_name, last_name]
-    return contact_dict[id]
-
-def delete_contact(contact_dict, *, id):
-    """Deletes contact from dictionary"""
-    if id not in contact_dict:
-        return "error"
-    rem_contact = contact_dict.pop(id)
-    return rem_contact
-
-def sort_contact(contact_dict, /):
-    """Sorts contacts by last name"""
-    sorts = sorted(contact_dict.items(), key = lambda item: (item[1][1], item[1][0]))
-    return sorts
+        for id, info in sort_contact(contact_dict).items():
+            first = info.get("first", "id")
+            last = info.get("last", "id")
+            print(f"{last:<20}{first:<20}{id:<10}")
 
 def find_contact(contact_dict, /, *, find):
     """Finds contacts by last name"""
     empty_contact = {}
-    if isinstance(find, (int, str)) and find in contact_dict:
+    if not find.isnumeric() and find not in contact_dict:
+        print("No contacts found, returning to main menu")
+        return "error"
+    if find.isnumeric() and find in contact_dict:
         empty_contact[find] = contact_dict[find]
-    for k, v in contact_dict.items():
-        first = v.get('first', '')
-        last = v.get('last', '')
-        if isinstance(find, str) and find in first or find in last:
-            empty_contact[k] = v
-    sorted(empty_contact.items(), key = lambda item: (item[1][1], item[1][0]))
+    for id, info in contact_dict.items():
+        first = info.get("first", "").lower()
+        last = info.get("last", "").lower()
+        if find.lower() in first or find.lower() in last:
+            empty_contact[id] = info
+    
+    print("================== FOUND CONTACT(S) ==================")
+    print("Last Name             First Name           Phone    ")
+    print("==================    ===================  ===========")
+    for id, info in sort_contact(empty_contact).items():
+        first = info.get("first", "id")
+        last = info.get("last", "id")
+        print(f"{last:<20}{first:<20}{id:<10}")
     return empty_contact
