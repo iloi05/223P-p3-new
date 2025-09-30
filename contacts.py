@@ -50,9 +50,7 @@ def delete_contact(contact_dict, *, id):
 
 def sort_contact(contact_dict, /):
     """Sorts contacts by last name"""
-    return {k: v for k, v in sorted(contact_dict.items(), key=lambda item: item[1].get("last", "") if isinstance(item[1], dict) else "")}
-
-      #  k: v for k, v in sorted(contact_dict.items(), key = lambda item: item[1].get("last", "") if isinstance(item[1], dict))}
+    return {k: v for k, v in sorted(contact_dict.items(), key = lambda item: item[1].get("last", ""))}
     
 def print_contact(contact_dict):
     """Prints contact list"""
@@ -70,15 +68,16 @@ def print_contact(contact_dict):
 def find_contact(contact_dict, /, *, find):
     """Finds contacts by last name"""
     empty_contact = {}
-    
-    if find in contact_dict:
-       if find.isnumeric():
-            empty_contact = contact_dict[find]
-       else:
-            for id, info in contact_dict.items():
-                last = info.get("last", "").lower()
-                if last == find.lower():
-                    empty_contact[id] = contact_dict[id]
+    if not find.isnumeric() and find not in contact_dict:
+        print("No contacts found, returning to main menu")
+        return "error"
+    if find.isnumeric() and find in contact_dict:
+        empty_contact[find] = contact_dict[find]
+    elif not find.isnumeric() and find in contact_dict:
+        for id, info in contact_dict.items():
+            last = info.get("last", "").lower()
+            if find.lower() == last:
+                empty_contact[id] = contact_dict[id]
     
     print("================== FOUND CONTACT(S) ==================")
     print("Last Name             First Name           Phone    ")
