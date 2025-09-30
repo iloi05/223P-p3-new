@@ -9,6 +9,20 @@ def is_int(id):
     except ValueError:
         return False
 
+def is_string_first(first_name):
+    try:
+        int(first_name)
+        return True
+    except ValueError:
+        return False
+    
+def is_string_last(last_name):
+    try:
+        int(last_name)
+        return True
+    except ValueError:
+        return False
+
 def add_contact(contact_dict, /, *, id, first_name, last_name):
     """Adds contact to dictionary"""
     if id in contact_dict:
@@ -49,21 +63,24 @@ def print_contact(contact_dict):
         for id, info in sort_contact(contact_dict).items():
             first = info.get("first", "id")
             last = info.get("last", "id")
-            print(f"{last:<20}{first:<20}{id:<10}")
+            print(f"{last:<20}{first:<21}{id:<9}")
 
 def find_contact(contact_dict, /, *, find):
     """Finds contacts by last name"""
     empty_contact = {}
-    if not find.isnumeric() and find not in contact_dict:
+    
+    if find.isnumeric():
+        if find in contact_dict:
+            empty_contact[find] = contact_dict[find]
+    elif find in contact_dict:
+        for id, info in contact_dict.items():
+            first = info.get("first", "").lower()
+            last = info.get("last", "").lower()
+            if find.lower() == first or find.lower() == last:
+                empty_contact[id] = info
+    if find not in contact_dict:
         print("No contacts found, returning to main menu")
         return "error"
-    if find.isnumeric() and find in contact_dict:
-        empty_contact[find] = contact_dict[find]
-    for id, info in contact_dict.items():
-        first = info.get("first", "").lower()
-        last = info.get("last", "").lower()
-        if find.lower() in first or find.lower() in last:
-            empty_contact[id] = info
     
     print("================== FOUND CONTACT(S) ==================")
     print("Last Name             First Name           Phone    ")
@@ -71,5 +88,5 @@ def find_contact(contact_dict, /, *, find):
     for id, info in sort_contact(empty_contact).items():
         first = info.get("first", "id")
         last = info.get("last", "id")
-        print(f"{last:<20}{first:<20}{id:<10}")
+        print(f"{last:<22}{first:<21}{id:<16}")
     return empty_contact

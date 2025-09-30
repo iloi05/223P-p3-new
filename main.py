@@ -24,7 +24,13 @@ while True:
             print("That is not a valid phone number.")
             continue
         first = input("Enter first name: ")
+       # if is_string_first(first_name = first):
+       #     print("That is not a valid name")
+        #    continue
         last = input("Enter last name: ")
+       # if is_string_last(last_name = last):
+        #    print("That is not a valid name")
+       #     continue
         add_contact(contacts, id = num, first_name  = first, last_name = last)
     elif prompt == "2":
         num = input("Enter phone number: ")
@@ -32,7 +38,13 @@ while True:
             print("That is not a valid phone number.")
             continue
         new_first = input("Enter first name: ")
+       # if is_string_first(first_name = new_first):
+        #    print("That is not a valid name")
+        #    continue
         new_last = input("Enter last name: ")
+        if is_string_last(last_name = new_last):
+            print("That is not a valid name")
+            continue
         modify_contact(contacts, id = num, first_name = new_first, last_name = new_last)
         print("Modified: {} {}".format(new_first, new_last))
     elif prompt == "3":
