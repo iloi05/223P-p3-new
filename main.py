@@ -57,7 +57,7 @@ while True:
         print_contact(contacts)
     elif prompt == "5":
         if not contacts:
-            print("The list is empty currently, no contacts found .... returning to main menu")
+            print("The list is empty currently .... returning to main menu")
             continue
         search = input("Enter search string: ")
         find_contact(contacts, find = search)

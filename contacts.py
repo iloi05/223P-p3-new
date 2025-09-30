@@ -50,40 +50,42 @@ def delete_contact(contact_dict, *, id):
 
 def sort_contact(contact_dict, /):
     """Sorts contacts by last name"""
-    return {k: v for k, v in sorted(contact_dict.items(), key = lambda item: item[1].get("last", ""))}
+    return sorted(contact_dict.items(), key = lambda item: (item[1].get("last", ""), item[1].get("first", "")))
+
     
 def print_contact(contact_dict):
     """Prints contact list"""
     if not contact_dict:
         print("The list is empty, put a name in first")
     else:
+
         print("================== CONTACT LIST ==================")
         print("Last Name           First Name           Phone    ")
         print("==================  ===================  =========")
-        for id, info in sort_contact(contact_dict).items():
-            first = info.get("first", "id")
-            last = info.get("last", "id")
+        for id, info in sort_contact(contact_dict):
+            first = info.get("first", "N/A")
+            last = info.get("last", "N/A")
             print(f"{last:<20}{first:<21}{id:<9}")
 
 def find_contact(contact_dict, /, *, find):
     """Finds contacts by last name"""
     empty_contact = {}
-    if not find.isnumeric() and find not in contact_dict:
-        print("No contacts found, returning to main menu")
-        return "error"
-    if find.isnumeric() and find in contact_dict:
+    if find in contact_dict:
         empty_contact[find] = contact_dict[find]
-    elif not find.isnumeric() and find in contact_dict:
-        for id, info in contact_dict.items():
-            last = info.get("last", "").lower()
-            if find.lower() == last:
-                empty_contact[id] = contact_dict[id]
-    
+    else:
+        for k, v in contact_dict.items():
+            if v.get("last", "").lower() == find.lower():
+                empty_contact[k] = contact_dict[k]
+            elif v.get("first", "").lower() == find.lower():
+                empty_contact[k] = contact_dict[k]
+    if empty_contact == {}:
+        print("Contact not found ... returning to main menu")
+        return "error"
     print("================== FOUND CONTACT(S) ==================")
     print("Last Name             First Name           Phone    ")
     print("==================    ===================  ===========")
-    for id, info in sort_contact(empty_contact).items():
-        first = info.get("first", "")
-        last = info.get("last", "")
+    for id, info in sort_contact(empty_contact):
+        last = info.get("last", "N/A")
+        first = info.get("first", "N/A")
         print(f"{last:<22}{first:<21}{id:<16}")
     return empty_contact
